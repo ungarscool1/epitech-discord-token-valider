@@ -13,17 +13,16 @@ public class MessageListener implements MessageCreateListener{
 
 	public void onMessageCreate(MessageCreateEvent event) {
 		if (event.getMessage().isPrivateMessage() && event.getMessageAuthor().isBotOwner() && event.getMessageAttachments().get(0).isImage()) {
-			IntraParser parser = new IntraParser("auth-58cf77ca2cd40d3e75955124b37c0bfbf3d397e0");
+			IntraParser parser = new IntraParser(Main.config.epiToken);
 			BufferedImage image = event.getMessageAttachments().get(0).downloadAsImage().join();
-			File output = new File("token.jpg");
+			File output = new File("./token.png");
 
 			try {
-				ImageIO.write(image, "jpg", output);
+				ImageIO.write(image, "png", output);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			event.getChannel().sendMessage(parser.validateToken("./token.jpg"));
+			event.getChannel().sendMessage(parser.validateToken("./token.png"));
 		} else {
 			if (event.getMessageAuthor().isBotUser())
 				return;

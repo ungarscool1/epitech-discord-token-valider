@@ -37,7 +37,7 @@ public class IntraParser {
 			HttpsURLConnection cl = (HttpsURLConnection) uri.openConnection();
 			cl.setRequestProperty("Accept", "application/json");
 			cl.setRequestProperty("Content-Type", "application/json");
-			cl.addRequestProperty("cookie", "user=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6Imxlby5nb2RhcmRAZXBpdGVjaC5ldSIsInR6IjpudWxsLCJleHAiOjE1ODI1OTU0NDR9.uq0VI8t3o7gD93fYwvXaRx9jMKKd1kIgBh5ZZAWbxAs");
+			cl.addRequestProperty("cookie", Main.config.cookie_user);
 			cl.setDoOutput(true);
 			cl.setDoInput(true);
 			cl.connect();
@@ -62,22 +62,20 @@ public class IntraParser {
 		Matcher match = null;
 		JsonObject activity = selectProperElem();
 		EmbedBuilder embed = new EmbedBuilder().setTitle("Validation du token").setFooter("Epitech's API Connector v.1");
-		try {
-			token = GoogleVision.detectText(imgPath);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		match = Pattern.compile("(\\d+){8}").matcher(token);
-		while (match.find()) {
-			token = match.group();
-		}
+
 		if (activity == null) {
-			embed.addField("N° token", token);
 			embed.addField(":warning:", "Aucune activité n'est à valider !");
 			embed.setColor(Color.red);
 		} else {
+			try {
+				token = GoogleVision.detectText(imgPath);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			match = Pattern.compile("(\\d+){8}").matcher(token);
+			while (match.find()) {
+				token = match.group();
+			}
 			embed.addField("N° token:", token);
 			embed.addField("Validation sur l'activité", activity.get("title").getAsString());
 			if (validateHttp(token, activity.get("token_link").getAsString()) == 1) {
@@ -86,7 +84,6 @@ public class IntraParser {
 				embed.addField(":warning:", error);
 				embed.setColor(Color.RED);
 			}
-			System.out.println(activity.get("token_link"));
 		}
 		return embed;
 	}
@@ -99,7 +96,7 @@ public class IntraParser {
             connection.setDoInput(true);
             connection.setRequestProperty("Accept", "application/json");
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.addRequestProperty("cookie", "user=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6Imxlby5nb2RhcmRAZXBpdGVjaC5ldSIsInR6IjpudWxsLCJleHAiOjE1ODI1OTU0NDR9.uq0VI8t3o7gD93fYwvXaRx9jMKKd1kIgBh5ZZAWbxAs");
+            connection.addRequestProperty("cookie", Main.config.cookie_user);
             connection.setRequestMethod("POST");
             OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
             writer.write("token=" + token + "&rate=0&comment=");
@@ -114,7 +111,7 @@ public class IntraParser {
             if (stringBuffer.toString().equalsIgnoreCase("{}")) {
             	return 1;
             } else {
-            	error = "Not expected content ! Content : " + res;
+            	error = "Le token n'est pas valide !";
             	return 0;
             }
         } catch (Exception e) {
