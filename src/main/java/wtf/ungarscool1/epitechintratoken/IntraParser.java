@@ -5,6 +5,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.CookieHandler;
+import java.net.CookieManager;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.regex.Matcher;
@@ -28,7 +30,13 @@ public class IntraParser {
 	
 	public IntraParser(String autolink) {
 		this.url = "https://intra.epitech.eu/" + autolink;
+		setDefaultCookie();
 		call();
+	}
+	
+	private void setDefaultCookie() {
+		CookieManager cm = new CookieManager();
+		CookieHandler.setDefault(cm);
 	}
 	
 	private void call() {
@@ -37,7 +45,6 @@ public class IntraParser {
 			HttpsURLConnection cl = (HttpsURLConnection) uri.openConnection();
 			cl.setRequestProperty("Accept", "application/json");
 			cl.setRequestProperty("Content-Type", "application/json");
-			cl.addRequestProperty("cookie", Main.config.cookie_user);
 			cl.setDoOutput(true);
 			cl.setDoInput(true);
 			cl.connect();
@@ -96,7 +103,6 @@ public class IntraParser {
             connection.setDoInput(true);
             connection.setRequestProperty("Accept", "application/json");
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.addRequestProperty("cookie", Main.config.cookie_user);
             connection.setRequestMethod("POST");
             OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
             writer.write("token=" + token + "&rate=0&comment=");
