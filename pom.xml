@@ -5,27 +5,36 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>Epitech Token validator</name>
   
+  <properties>
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<main.class>wtf.ungarscool1.epitechintratoken.Main</main.class>
+  </properties>
   <dependencyManagement>
- <dependencies>
-  <dependency>
-    <groupId>com.google.cloud</groupId>
-    <artifactId>libraries-bom</artifactId>
-    <version>2.8.0</version>
-    <type>pom</type>
-    <scope>import</scope>
-   </dependency>
- </dependencies>
-</dependencyManagement>
+	<dependencies>
+  		<dependency>
+    		<groupId>com.google.cloud</groupId>
+    		<artifactId>libraries-bom</artifactId>
+    		<version>2.8.0</version>
+    		<type>pom</type>
+    		<scope>import</scope>
+   		</dependency>
+ 	</dependencies>
+  </dependencyManagement>
   
   <dependencies>
-  <dependency>
-  <groupId>com.google.cloud</groupId>
-  <artifactId>google-cloud-vision</artifactId>
-</dependency>
+  	<dependency>
+  		<groupId>com.google.cloud</groupId>
+  		<artifactId>google-cloud-vision</artifactId>
+	</dependency>
+	<dependency> 
+ 		<groupId>net.sourceforge.tess4j</groupId> 
+ 		<artifactId>tess4j</artifactId> 
+ 		<version>4.5.3</version> 
+	</dependency>
 	<dependency>
     	<groupId>org.javacord</groupId>
     	<artifactId>javacord</artifactId>
-    	<version>3.0.5</version>
+    	<version>3.0.6</version>
     	<type>pom</type>
 	</dependency>
 	<dependency>
@@ -34,4 +43,48 @@
     	<version>2.8.6</version>
 	</dependency>
   </dependencies>
+  
+  <build>
+		<defaultGoal>clean package</defaultGoal>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<fork>true</fork>
+					<encoding>UTF-8</encoding>
+					<compilerArgs>
+						<arg>-XDignore.symbol.file</arg>
+					</compilerArgs>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.1.1</version>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<archive>
+								<manifest>
+									<mainClass>${main.class}</mainClass>
+								</manifest>
+							</archive>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

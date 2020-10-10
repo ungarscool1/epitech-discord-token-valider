@@ -68,17 +68,13 @@ public class IntraParser {
 		String token = "";
 		Matcher match = null;
 		JsonObject activity = selectProperElem();
-		EmbedBuilder embed = new EmbedBuilder().setTitle("Validation du token").setFooter("Epitech's API Connector v.1");
+		EmbedBuilder embed = new EmbedBuilder().setTitle("Validation du token").setFooter("Epitech's API Connector v.1.1");
 
 		if (activity == null) {
 			embed.addField(":warning:", "Aucune activité n'est à valider !");
 			embed.setColor(Color.red);
 		} else {
-			try {
-				token = GoogleVision.detectText(imgPath);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			token = DetectText.getImgText(imgPath).replace(" ", "");
 			match = Pattern.compile("(\\d+){8}").matcher(token);
 			while (match.find()) {
 				token = match.group();

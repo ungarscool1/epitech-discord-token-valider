@@ -26,7 +26,7 @@ public class Main {
 			config = gson.fromJson(rd, Configuration.class);
 		} catch (FileNotFoundException e) {
 			System.err.println("Le fichier n'a pas été trouvé ou vous n'avez pas les droits.\n");
-			System.exit(84);
+			System.exit(1);
 		}
 		config.checkConfiguration();
 		api = new DiscordApiBuilder().setToken(config.botToken).login().join();

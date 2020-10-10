@@ -12,6 +12,10 @@ import org.javacord.api.listener.message.MessageCreateListener;
 public class MessageListener implements MessageCreateListener{
 
 	public void onMessageCreate(MessageCreateEvent event) {
+		if (event.getMessage().isPrivateMessage() && event.getMessageAuthor().isBotOwner() && event.getMessageAttachments().isEmpty()) {
+			event.getChannel().sendMessage("Je fonctionne qu'avec des images.");
+			return;
+		}
 		if (event.getMessage().isPrivateMessage() && event.getMessageAuthor().isBotOwner() && event.getMessageAttachments().get(0).isImage()) {
 			IntraParser parser = new IntraParser(Main.config.epiToken);
 			BufferedImage image = event.getMessageAttachments().get(0).downloadAsImage().join();
